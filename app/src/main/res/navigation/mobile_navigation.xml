@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--How to use it:-->
+<!--1) create the navigation xml -->
+<!--2) attach it with code (found in the main activity)-->
+<!--3) create item list in the nav_bar-->
+<!--4) create fragments with the same id as above-->
+
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools" android:id="@+id/mobile_navigation"
+            app:startDestination="@id/currentWeatherFragment">
+
+    <fragment android:id="@+id/currentWeatherFragment"
+              android:name="com.example.constaweather.ui.weather.current.CurrentWeatherFragment"
+              android:label="current_weather_fragment" tools:layout="@layout/current_weather_fragment"/>
+    <fragment android:id="@+id/futureListWeatherFragment"
+              android:name="com.example.constaweather.ui.weather.future.list.FutureListWeatherFragment"
+              android:label="future_list_weather_fragment" tools:layout="@layout/future_list_weather_fragment"/>
+    <fragment android:id="@+id/futureDetailWeatherFragment"
+              android:name="com.example.constaweather.ui.weather.future.detail.FutureDetailWeatherFragment"
+              android:label="future_detail_weather_fragment" tools:layout="@layout/future_detail_weather_fragment"/>
+    <fragment android:id="@+id/settingsFragment" android:name="com.example.constaweather.ui.settings.SettingsFragment"
+              android:label="SettingsFragment"/>
+</navigation>
