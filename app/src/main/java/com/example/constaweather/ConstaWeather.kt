@@ -1,8 +1,12 @@
 package com.example.constaweather
 
 import android.app.Application
+import android.preference.PreferenceManager
 import com.example.constaweather.data.db.ForecastDatabase
 import com.example.constaweather.data.network.*
+import com.example.constaweather.data.provider.PreferenceProvider
+import com.example.constaweather.data.provider.UnitProvider
+import com.example.constaweather.data.provider.UnitProviderImpl
 import com.example.constaweather.data.repository.ForecastRepository
 import com.example.constaweather.data.repository.ForecastRepositoryImpl
 import com.example.constaweather.ui.weather.current.CurrentWeatherViewModelFactory
@@ -24,11 +28,13 @@ class ConstaWeather : Application(), KodeinAware {
         bind() from singleton { ApixuWeatherApiService(instance()) }
         bind<WeatherNetworkDataSource>() with singleton { WeatherNetworkDataSourceImpl(instance()) }
         bind<ForecastRepository>() with singleton { ForecastRepositoryImpl(instance(), instance()) }
-        bind() from provider { CurrentWeatherViewModelFactory(instance()) }
+        bind<UnitProvider>() with singleton { UnitProviderImpl(instance()) }
+        bind() from provider { CurrentWeatherViewModelFactory(instance(), instance()) }
     }
 
     override fun onCreate() {
         super.onCreate()
         AndroidThreeTen.init(this)
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
     }
 }
