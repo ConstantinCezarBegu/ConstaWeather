@@ -20,10 +20,10 @@ import org.kodein.di.generic.instance
 
 class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
 
-
-    override val kodein: Kodein by closestKodein()
-    private lateinit var viewModel: CurrentWeatherViewModel
+    override val kodein by closestKodein()
     private val viewModelFactory: CurrentWeatherViewModelFactory by instance()
+
+    private lateinit var viewModel: CurrentWeatherViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,28 +34,19 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrentWeatherViewModel::class.java)
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(CurrentWeatherViewModel::class.java)
 
         bindUI()
-
-//        val apiService = ApixuWeatherApiService(ConnectivityInterceptorImpl(context!!))
-//        val weatherNetworkDataSource = WeatherNetworkDataSourceImpl(apiService)
-//        weatherNetworkDataSource.downloadedCurrentWeather.observe(this, Observer {
-//            textView.text = it.toString()
-//        })
-//
-//        GlobalScope.launch(Dispatchers.Main) {
-//
-//            weatherNetworkDataSource.fetchCurrentWeather("London", "en")
-//        }
-
     }
 
     private fun bindUI() = launch {
         val currentWeather = viewModel.weather.await()
+
         val weatherLocation = viewModel.weatherLocation.await()
 
-        weatherLocation.observe(this@CurrentWeatherFragment, Observer {location ->
+        weatherLocation.observe(this@CurrentWeatherFragment, Observer { location ->
             if (location == null) return@Observer
             updateLocation(location.name)
         })
@@ -71,8 +62,6 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             updateWind(it.windDirection, it.windSpeed)
             updateVisibility(it.visibilityDistance)
 
-            // to use glide you need to create a interface class then rebuild the app.
-            Log.d("test", it.conditionIconUrl)
             GlideApp.with(this@CurrentWeatherFragment)
                 .load("https:${it.conditionIconUrl}")
                 .into(imageView_condition_icon)
@@ -117,3 +106,4 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
     }
 
 }
+

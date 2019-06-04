@@ -1,6 +1,7 @@
 package com.example.constaweather
 
 import android.app.Application
+import android.content.Context
 import android.location.Location
 import android.preference.PreferenceManager
 import com.example.constaweather.data.db.ForecastDatabase
@@ -9,14 +10,13 @@ import com.example.constaweather.data.provider.*
 import com.example.constaweather.data.repository.ForecastRepository
 import com.example.constaweather.data.repository.ForecastRepositoryImpl
 import com.example.constaweather.ui.weather.current.CurrentWeatherViewModelFactory
+import com.google.android.gms.location.LocationServices
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
-import org.kodein.di.generic.bind
-import org.kodein.di.generic.instance
-import org.kodein.di.generic.provider
-import org.kodein.di.generic.singleton
+import org.kodein.di.generic.*
+import org.threeten.bp.LocalDate
 
 class ConstaWeather : Application(), KodeinAware {
     override val kodein: Kodein = Kodein.lazy {
@@ -27,10 +27,12 @@ class ConstaWeather : Application(), KodeinAware {
         bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }
         bind() from singleton { ApixuWeatherApiService(instance()) }
         bind<WeatherNetworkDataSource>() with singleton { WeatherNetworkDataSourceImpl(instance()) }
-        bind<LocationProvider>() with singleton { LocationProviderImpl() }
-        bind<ForecastRepository>() with singleton { ForecastRepositoryImpl(instance(), instance(), instance(), instance() ) }
+        bind() from provider { LocationServices.getFusedLocationProviderClient(instance<Context>()) }
+        bind<LocationProvider>() with singleton { LocationProviderImpl(instance(), instance()) }
+        bind<ForecastRepository>() with singleton { ForecastRepositoryImpl(instance(), instance(), instance(), instance()) }
         bind<UnitProvider>() with singleton { UnitProviderImpl(instance()) }
         bind() from provider { CurrentWeatherViewModelFactory(instance(), instance()) }
+
     }
 
     override fun onCreate() {

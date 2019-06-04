@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
 import java.util.*
 
@@ -22,11 +23,12 @@ class ForecastRepositoryImpl(
     private val locationProvider: LocationProvider
 ) : ForecastRepository {
 
-
-
     init {
-        weatherNetworkDataSource.downloadedCurrentWeather.observeForever { newCurrentWeather ->
-            persistFetchedCurrentWeather(newCurrentWeather)
+        weatherNetworkDataSource.apply {
+            downloadedCurrentWeather.observeForever { newCurrentWeather ->
+                persistFetchedCurrentWeather(newCurrentWeather)
+            }
+
         }
     }
 
@@ -38,31 +40,37 @@ class ForecastRepositoryImpl(
         }
     }
 
+
+
+
     override suspend fun getWeatherLocation(): LiveData<WeatherLocation> {
         return withContext(Dispatchers.IO) {
             return@withContext weatherLocationDao.getLocation()
         }
     }
 
-    private fun persistFetchedCurrentWeather(fetchedCurrentWeather: CurrentWeatherResponse) {
-        // Since this is a repository and does not have a lifecycle then global scope is perfect same reason with observe forever.
+    private fun persistFetchedCurrentWeather(fetchedWeather: CurrentWeatherResponse) {
         GlobalScope.launch(Dispatchers.IO) {
-            currentWeatherDao.upsert(fetchedCurrentWeather.currentWeatherEntry)
-            weatherLocationDao.upsert(fetchedCurrentWeather.location)
+            currentWeatherDao.upsert(fetchedWeather.currentWeatherEntry)
+            weatherLocationDao.upsert(fetchedWeather.location)
         }
     }
 
-    private suspend fun initWeatherData() {
-        val lastWeatherLocation = weatherLocationDao.getLocation().value
 
-        if (lastWeatherLocation == null || locationProvider.hasLocationChanged(lastWeatherLocation)) {
+    private suspend fun initWeatherData() {
+        val lastWeatherLocation = weatherLocationDao.getLocationNonLive()
+
+        if (lastWeatherLocation == null
+            || locationProvider.hasLocationChanged(lastWeatherLocation)) {
             fetchCurrentWeather()
+
             return
         }
 
-        if (isFetchCurrentNeeded(lastWeatherLocation.zonedDateTime)) {
+        if (isFetchCurrentNeeded(lastWeatherLocation.zonedDateTime))
             fetchCurrentWeather()
-        }
+
+
     }
 
     private suspend fun fetchCurrentWeather() {
@@ -72,8 +80,10 @@ class ForecastRepositoryImpl(
         )
     }
 
+
     private fun isFetchCurrentNeeded(lastFetchTime: ZonedDateTime): Boolean {
         val thirtyMinutesAgo = ZonedDateTime.now().minusMinutes(30)
         return lastFetchTime.isBefore(thirtyMinutesAgo)
     }
+
 }
