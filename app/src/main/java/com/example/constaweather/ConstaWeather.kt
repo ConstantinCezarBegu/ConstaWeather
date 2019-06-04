@@ -1,12 +1,11 @@
 package com.example.constaweather
 
 import android.app.Application
+import android.location.Location
 import android.preference.PreferenceManager
 import com.example.constaweather.data.db.ForecastDatabase
 import com.example.constaweather.data.network.*
-import com.example.constaweather.data.provider.PreferenceProvider
-import com.example.constaweather.data.provider.UnitProvider
-import com.example.constaweather.data.provider.UnitProviderImpl
+import com.example.constaweather.data.provider.*
 import com.example.constaweather.data.repository.ForecastRepository
 import com.example.constaweather.data.repository.ForecastRepositoryImpl
 import com.example.constaweather.ui.weather.current.CurrentWeatherViewModelFactory
@@ -24,10 +23,12 @@ class ConstaWeather : Application(), KodeinAware {
         import(androidXModule(this@ConstaWeather))
         bind() from singleton { ForecastDatabase(instance()) }
         bind() from singleton { instance<ForecastDatabase>().currentWeatherDao() }
+        bind() from singleton { instance<ForecastDatabase>().weatherLocationDao() }
         bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }
         bind() from singleton { ApixuWeatherApiService(instance()) }
         bind<WeatherNetworkDataSource>() with singleton { WeatherNetworkDataSourceImpl(instance()) }
-        bind<ForecastRepository>() with singleton { ForecastRepositoryImpl(instance(), instance()) }
+        bind<LocationProvider>() with singleton { LocationProviderImpl() }
+        bind<ForecastRepository>() with singleton { ForecastRepositoryImpl(instance(), instance(), instance(), instance() ) }
         bind<UnitProvider>() with singleton { UnitProviderImpl(instance()) }
         bind() from provider { CurrentWeatherViewModelFactory(instance(), instance()) }
     }
