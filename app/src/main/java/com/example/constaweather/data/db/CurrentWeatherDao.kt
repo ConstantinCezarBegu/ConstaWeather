@@ -7,8 +7,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.constaweather.data.db.entity.CURRENT_WEATHER_ID
 import com.example.constaweather.data.db.entity.CurrentWeatherEntry
-import com.example.constaweather.data.db.unitlocolized.ImperialCurrentWeatherEntry
-import com.example.constaweather.data.db.unitlocolized.MetricCurrentWeatherEntry
+import com.example.constaweather.data.db.unitlocolized.Current.ImperialCurrentWeatherEntry
+import com.example.constaweather.data.db.unitlocolized.Current.MetricCurrentWeatherEntry
 
 
 @Dao

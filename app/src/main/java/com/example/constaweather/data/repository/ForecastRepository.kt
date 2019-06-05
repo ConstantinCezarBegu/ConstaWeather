@@ -2,9 +2,7 @@ package com.example.constaweather.data.repository
 
 import androidx.lifecycle.LiveData
 import com.example.constaweather.data.db.entity.WeatherLocation
-import com.example.constaweather.data.db.unitlocolized.UnitSpecificCurrentWeatherEntry
-
-import org.threeten.bp.LocalDate
+import com.example.constaweather.data.db.unitlocolized.Current.UnitSpecificCurrentWeatherEntry
 
 
 interface ForecastRepository {

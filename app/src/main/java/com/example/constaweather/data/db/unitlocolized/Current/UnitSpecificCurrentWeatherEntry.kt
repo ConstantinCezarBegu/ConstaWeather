@@ -1,4 +1,4 @@
-package com.example.constaweather.data.db.unitlocolized
+package com.example.constaweather.data.db.unitlocolized.Current
 
 //interface that gets the data from empirical and metric
 
