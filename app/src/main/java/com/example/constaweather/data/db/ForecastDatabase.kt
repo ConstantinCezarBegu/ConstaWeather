@@ -3,11 +3,12 @@ package com.example.constaweather.data.db
 import android.content.Context
 import androidx.room.*
 import com.example.constaweather.data.db.entity.CurrentWeatherEntry
+import com.example.constaweather.data.db.entity.FutureWeatherEntry
 import com.example.constaweather.data.db.entity.WeatherLocation
 
 
 @Database(
-    entities = [CurrentWeatherEntry::class, WeatherLocation::class],
+    entities = [CurrentWeatherEntry::class, FutureWeatherEntry::class, WeatherLocation::class],
     version = 1
 )
 @TypeConverters(LocalDateConverter::class)
