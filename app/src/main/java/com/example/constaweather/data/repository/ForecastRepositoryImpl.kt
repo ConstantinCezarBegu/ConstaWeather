@@ -1,16 +1,18 @@
+package com.example.constaweather.data.repository
+
 import androidx.lifecycle.LiveData
 import com.example.constaweather.data.db.CurrentWeatherDao
 import com.example.constaweather.data.db.FutureWeatherDao
 import com.example.constaweather.data.db.WeatherLocationDao
 import com.example.constaweather.data.db.entity.WeatherLocation
 import com.example.constaweather.data.db.unitlocolized.Current.UnitSpecificCurrentWeatherEntry
-import com.example.constaweather.data.db.unitlocolized.future.UnitSpecificSimpleFutureWeatherEntry
+import com.example.constaweather.data.db.unitlocolized.future.detail.UnitSpecificDetailFutureWeatherEntry
+import com.example.constaweather.data.db.unitlocolized.future.list.UnitSpecificSimpleFutureWeatherEntry
 import com.example.constaweather.data.network.FORECAST_DAYS_COUNT
 import com.example.constaweather.data.network.WeatherNetworkDataSource
 import com.example.constaweather.data.network.response.CurrentWeatherResponse
 import com.example.constaweather.data.network.response.FutureWeatherResponse
 import com.example.constaweather.data.provider.LocationProvider
-import com.example.constaweather.data.repository.ForecastRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -26,6 +28,7 @@ class ForecastRepositoryImpl(
     private val weatherNetworkDataSource: WeatherNetworkDataSource,
     private val locationProvider: LocationProvider
 ) : ForecastRepository {
+
 
     init {
         weatherNetworkDataSource.apply {
@@ -57,16 +60,17 @@ class ForecastRepositoryImpl(
         }
     }
 
-//    override suspend fun getFutureWeatherByDate(
-//        date: LocalDate,
-//        metric: Boolean
-//    ): LiveData<out UnitSpecificDetailFutureWeatherEntry> {
-//        return withContext(Dispatchers.IO) {
-//            initWeatherData()
-//            return@withContext if (metric) futureWeatherDao.getDetailedWeatherByDateMetric(date)
-//            else futureWeatherDao.getDetailedWeatherByDateImperial(date)
-//        }
-//    }
+    override suspend fun getFutureWeatherByDate(
+        date: LocalDate,
+        metric: Boolean
+    ): LiveData<out UnitSpecificDetailFutureWeatherEntry> {
+        return withContext(Dispatchers.IO) {
+            initWeatherData()
+            return@withContext if (metric) futureWeatherDao.getDetailedWeatherByDateMetric(date)
+            else futureWeatherDao.getDetailedWeatherByDateImperial(date)
+        }
+    }
+
 
     override suspend fun getWeatherLocation(): LiveData<WeatherLocation> {
         return withContext(Dispatchers.IO) {
