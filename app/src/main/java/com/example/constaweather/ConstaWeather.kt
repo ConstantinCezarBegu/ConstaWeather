@@ -33,7 +33,9 @@ class ConstaWeather : Application(), KodeinAware {
         bind<LocationProvider>() with singleton { LocationProviderImpl(instance(), instance()) }
         bind<ForecastRepository>() with singleton { ForecastRepositoryImpl(instance(), instance(), instance(), instance(), instance()) }
         bind<UnitProvider>() with singleton { UnitProviderImpl(instance()) }
+
         bind() from provider { CurrentWeatherViewModelFactory(instance(), instance()) }
+
         bind() from provider { FutureListWeatherViewModelFactory(instance(), instance()) }
         // This is used since the detailedDate is not a constant
         bind() from factory { detailDate: LocalDate -> FutureDetailWeatherViewModelFactory(detailDate, instance(), instance()) }

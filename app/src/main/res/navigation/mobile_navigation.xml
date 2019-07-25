@@ -19,7 +19,7 @@
               android:name="com.example.constaweather.ui.weather.future.list.FutureListWeatherFragment"
               android:label="future_list_weather_fragment" tools:layout="@layout/future_list_weather_fragment">
         <action android:id="@+id/actionDetail"
-                app:destination="@id/futureDetailWeatherFragment"/>
+                app:destination="@+id/futureDetailWeatherFragment"/>
     </fragment>
     <fragment android:id="@+id/futureDetailWeatherFragment"
               android:name="com.example.constaweather.ui.weather.future.detail.FutureDetailWeatherFragment"

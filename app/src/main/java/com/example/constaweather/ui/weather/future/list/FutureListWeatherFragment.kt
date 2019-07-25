@@ -1,16 +1,14 @@
 package com.example.constaweather.ui.weather.future.list
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import com.example.constaweather.R
 import com.example.constaweather.data.db.LocalDateConverter
 import com.example.constaweather.data.db.unitlocolized.future.list.UnitSpecificSimpleFutureWeatherEntry
@@ -24,6 +22,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 import org.threeten.bp.LocalDate
+import java.util.Collections.addAll
 
 class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
 
@@ -73,7 +72,7 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle = "Next Week"
     }
 
-    private fun List<UnitSpecificSimpleFutureWeatherEntry>.toFutureWeatherItems() : List<FutureWeatherItem> {
+    private fun List<UnitSpecificSimpleFutureWeatherEntry>.toFutureWeatherItems(): List<FutureWeatherItem> {
         return this.map {
             FutureWeatherItem(it)
         }
